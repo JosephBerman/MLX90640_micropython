@@ -1,6 +1,7 @@
 """
 Manually Statically compiled optimized code for MicroPython MLX90640 and ESP32-C3 and urequests
 """
+file_num = 0
 import machine, network  # type: ignore
 import math
 import struct
@@ -25,6 +26,7 @@ wifi_known_names = list(wifi_keys.keys())
 wifi_known_passs = list(wifi_keys.values())
 firebase_url_endpoint = secrets.get_firebase_endpoint()
 wlan = network.WLAN(network.STA_IF)
+
 wlan.active(True)
 class wifi:
   def scan(self):
@@ -1021,8 +1023,14 @@ class MLX90640:  # pylint: disable=too-many-instance-attributes
 def to_firebase(data):
 #   data = list(map(lambda temp: str(temp), data))
   data=f'{{"json":"{json.dumps(data)}"}}'
-  # print(f"Sending data: {data}")
-  print(f"Sending Data %d",data)
+  print(f"Sending data: {data}")
+  #print(f"Sending Data %d <removed>)
+  
+  file = open('testpic.txt','w')
+  file.write(data)
+  file.close
+    
+  
   return requests.put(firebase_url_endpoint, data=data)
 
 def __memory_manage(dump=False):
@@ -1056,7 +1064,7 @@ def main():
   mlx.refresh_rate = RefreshRate.REFRESH_2_HZ
   frame = [0]*768
   while True:
-      # SCL=1, SDA=0 on QT PY C3
+      # SCL=6, SDA=5 on QT PY C3
       try:
           print("Querying camera ...\n")
           mlx.getFrame(frame)
@@ -1076,4 +1084,6 @@ def main():
   
 if __name__ == '__main__':
   main()
+
+
 
