@@ -1022,7 +1022,7 @@ def to_firebase(data):
 #   data = list(map(lambda temp: str(temp), data))
   data=f'{{"json":"{json.dumps(data)}"}}'
   # print(f"Sending data: {data}")
-  print(f"Sending Data <removed for efficiency>")
+  print(f"Sending Data %d",data)
   return requests.put(firebase_url_endpoint, data=data)
 
 def __memory_manage(dump=False):
@@ -1051,12 +1051,12 @@ def main():
   
   __memory_manage()
   
-  ixc = I2C(pins=(6, 5), frequency=800000)
+  ixc = I2C(pins=(1, 0), frequency=800000)
   mlx = MLX90640(ixc)
   mlx.refresh_rate = RefreshRate.REFRESH_2_HZ
   frame = [0]*768
   while True:
-      # SCL=6, SDA=5 on QT PY C3
+      # SCL=1, SDA=0 on QT PY C3
       try:
           print("Querying camera ...\n")
           mlx.getFrame(frame)
@@ -1076,3 +1076,4 @@ def main():
   
 if __name__ == '__main__':
   main()
+
